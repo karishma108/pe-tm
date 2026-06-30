@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PE-TM Binding Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #818cf8;
+            --secondary: #0ea5e9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--gray-800);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px 40px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--gray-900);
+            line-height: 1.2;
+        }
+
+        .logo-text p {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .header-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(14, 165, 233, 0.1));
+            padding: 10px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Main Card */
+        .main-card {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            overflow: visible;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px;
+            overflow: visible;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-bottom: 28px;
+        }
+
+        /* Custom Dropdown / Search Select */
+        .search-section {
+            margin-bottom: 32px;
+            overflow: visible;
+        }
+
+        .custom-select {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            overflow: visible;
+        }
+
+        .select-trigger {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 22px;
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .select-trigger:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-md);
+        }
+
+        .select-trigger.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+
+        .select-trigger-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .select-trigger-text {
+            flex: 1;
+            font-size: 15px;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .select-trigger-text.selected {
+            color: var(--gray-900);
+            font-weight: 600;
+        }
+
+        .select-trigger-arrow {
+            color: var(--gray-400);
+            font-size: 14px;
+            transition: transform 0.3s;
+        }
+
+        .select-trigger.active .select-trigger-arrow {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+
+        .select-options {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 14px;
+            box-shadow: var(--shadow-xl);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+            max-height: 400px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .select-options.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .select-search {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .select-search-input {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--white);
+            transition: all 0.2s;
+        }
+
+        .select-search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .select-search-wrap {
+            position: relative;
+        }
+
+        .select-search-wrap i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 13px;
+        }
+
+        .select-option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .select-option:last-child {
+            border-bottom: none;
+        }
+
+        .select-option:hover {
+            background: var(--gray-50);
+        }
+
+        .select-option.selected {
+            background: linear-gradient(90deg, rgba(79, 70, 229, 0.08), transparent);
+        }
+
+        .option-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .option-info {
+            flex: 1;
+        }
+
+        .option-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 2px;
+        }
+
+        .option-desc {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .option-check {
+            color: var(--primary);
+            font-size: 16px;
+            opacity: 0;
+        }
+
+        .select-option.selected .option-check {
+            opacity: 1;
+        }
+
+        .no-results {
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--gray-500);
+        }
+
+        .no-results i {
+            font-size: 32px;
+            color: var(--gray-300);
+            margin-bottom: 8px;
+        }
+
+        /* PDF Viewer */
+        .pdf-section {
+            background: var(--gray-50);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .pdf-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .pdf-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .pdf-title i {
+            color: var(--danger);
+            font-size: 20px;
+        }
+
+        .pdf-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            padding: 8px 14px;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--gray-700);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .btn-icon:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-400);
+        }
+
+        .pdf-viewer {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pdf-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--gray-100);
+            border-bottom: 1px solid var(--gray-200);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pdf-page-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+
+        .pdf-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pdf-nav button {
+            padding: 6px 12px;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--gray-700);
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .pdf-nav button:hover:not(:disabled) {
+            background: var(--gray-50);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .pdf-nav button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pdf-canvas-container {
+            flex: 1;
+            overflow: auto;
+            background: var(--gray-200);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            min-height: 500px;
+            max-height: 700px;
+        }
+
+        .pdf-canvas-container canvas {
+            box-shadow: var(--shadow-lg);
+            background: white;
+            max-width: 100%;
+            height: auto !important;
+        }
+
+        .pdf-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: var(--gray-500);
+            gap: 12px;
+        }
+
+        .pdf-loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .pdf-placeholder {
+            padding: 80px 20px;
+            text-align: center;
+            color: var(--gray-500);
+        }
+
+        .pdf-placeholder-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(14, 165, 233, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .pdf-placeholder i {
+            font-size: 44px;
+            color: var(--primary);
+        }
+
+        .pdf-placeholder h4 {
+            font-size: 18px;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .pdf-placeholder p {
+            font-size: 14px;
+            color: var(--gray-500);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: slideUp 0.4s;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .header { padding: 20px; flex-direction: column; text-align: center; }
+            .content { padding: 24px 20px; }
+            .logo-text h1 { font-size: 20px; }
+            .pdf-viewer iframe { height: 400px; }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--white);
+            padding: 14px 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-xl);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 2000;
+            animation: slideIn 0.3s;
+            min-width: 280px;
+        }
+
+        .toast.show { display: flex; }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>PE-TM Binding Documentation</h1>
+                    <p>Select your DLT portal to view the binding guidelines</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="main-card">
+            <div class="content">
+                <!-- Search / Select Section -->
+                <div class="search-section">
+                    <h2 class="section-title">Select the DLT Portal Where You Have Done the DLT</h2>
+                    <p class="section-subtitle">Click the search box below and choose your operator to view the PE-TM binding documentation</p>
+
+                    <div class="custom-select" id="customSelect">
+                        <div class="select-trigger" id="selectTrigger">
+                            <div class="select-trigger-icon" id="selectTriggerIcon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="select-trigger-text" id="selectTriggerText">
+                                Search and select your DLT portal...
+                            </div>
+                            <div class="select-trigger-arrow">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="select-options" id="selectOptions">
+                            <div class="select-search">
+                                <div class="select-search-wrap">
+                                    <i class="fas fa-search"></i>
+                                    <input
+                                        type="text"
+                                        class="select-search-input"
+                                        id="selectSearchInput"
+                                        placeholder="Type to search operators..."
+                                        autocomplete="off"
+                                    >
+                                </div>
+                            </div>
+                            <div id="optionsList">
+                                <div class="select-option" data-operator="airtel">
+                                    <div class="option-icon" style="background: linear-gradient(135deg, #ed1c24, #b91c1c);">A</div>
+                                    <div class="option-info">
+                                        <div class="option-name">Airtel</div>
+                                        <div class="option-desc">Airtel DLT Portal</div>
+                                    </div>
+                                    <i class="fas fa-check option-check"></i>
+                                </div>
+                                <div class="select-option" data-operator="jio">
+                                    <div class="option-icon" style="background: linear-gradient(135deg, #0050b3, #003a82);">J</div>
+                                    <div class="option-info">
+                                        <div class="option-name">Jio</div>
+                                        <div class="option-desc">Jio TrueConnect DLT</div>
+                                    </div>
+                                    <i class="fas fa-check option-check"></i>
+                                </div>
+                                <div class="select-option" data-operator="smartping">
+                                    <div class="option-icon" style="background: linear-gradient(135deg, #ff6b35, #e55a2b);">SP</div>
+                                    <div class="option-info">
+                                        <div class="option-name">Smartping</div>
+                                        <div class="option-desc">Smartping DLT Portal</div>
+                                    </div>
+                                    <i class="fas fa-check option-check"></i>
+                                </div>
+                                <div class="select-option" data-operator="vilpower">
+                                    <div class="option-icon" style="background: linear-gradient(135deg, #10b981, #059669);">V</div>
+                                    <div class="option-info">
+                                        <div class="option-name">Vilpower</div>
+                                        <div class="option-desc">Vilpower DLT Portal</div>
+                                    </div>
+                                    <i class="fas fa-check option-check"></i>
+                                </div>
+                                <div class="select-option" data-operator="bsnl">
+                                    <div class="option-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">B</div>
+                                    <div class="option-info">
+                                        <div class="option-name">BSNL</div>
+                                        <div class="option-desc">BSNL DLT Portal</div>
+                                    </div>
+                                    <i class="fas fa-check option-check"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PDF Viewer Section -->
+                <div class="pdf-section" id="pdfSection" style="display: none;">
+                    <div class="pdf-header">
+                        <div class="pdf-title">
+                            <i class="fas fa-file-pdf"></i>
+                            <span id="pdfTitle">PE-TM Binding Documentation</span>
+                        </div>
+                        <div class="pdf-actions">
+                            <a href="#" id="downloadBtn" class="btn-icon" target="_blank" download>
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                            <a href="#" id="openNewTabBtn" class="btn-icon" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> Open
+                            </a>
+                        </div>
+                    </div>
+                    <div class="pdf-viewer" id="pdfViewer">
+                        <div class="pdf-placeholder">
+                            <div class="pdf-placeholder-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <h4>Select an operator to view documentation</h4>
+                            <p>Choose a DLT portal from the search above to load its PE-TM binding guide</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle" id="toastIcon"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // Configure PDF.js worker
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+
+        // Operator configuration
+        const operators = {
+            airtel: {
+                name: 'Airtel',
+                pdf: 'AIRTEL_PE-TM .pdf',
+                color: '#ed1c24',
+                iconBg: 'linear-gradient(135deg, #ed1c24, #b91c1c)',
+                letter: 'A'
+            },
+            jio: {
+                name: 'Jio',
+                pdf: 'JIO PE-TM Chain.pdf',
+                color: '#0050b3',
+                iconBg: 'linear-gradient(135deg, #0050b3, #003a82)',
+                letter: 'J'
+            },
+            smartping: {
+                name: 'Smartping',
+                pdf: 'Smartping PE-TM Mapping.pdf',
+                color: '#ff6b35',
+                iconBg: 'linear-gradient(135deg, #ff6b35, #e55a2b)',
+                letter: 'SP'
+            },
+            vilpower: {
+                name: 'Vilpower',
+                pdf: 'Vilpower PE TM Chain.pdf',
+                color: '#10b981',
+                iconBg: 'linear-gradient(135deg, #10b981, #059669)',
+                letter: 'V'
+            },
+            bsnl: {
+                name: 'BSNL',
+                pdf: 'BSNL PE-TM Mapping .pdf',
+                color: '#f59e0b',
+                iconBg: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                letter: 'B'
+            }
+        };
+
+        let selectedOperator = null;
+        let currentPdfDoc = null;
+        let currentPage = 1;
+        let totalPages = 0;
+        let currentScale = 1.2;
+        let currentRenderTask = null;
+        const SCALE_STEP = 0.25;
+        const MIN_SCALE = 0.5;
+        const MAX_SCALE = 3.0;
+
+        // Custom dropdown elements
+        const customSelect = document.getElementById('customSelect');
+        const selectTrigger = document.getElementById('selectTrigger');
+        const selectTriggerIcon = document.getElementById('selectTriggerIcon');
+        const selectTriggerText = document.getElementById('selectTriggerText');
+        const selectOptions = document.getElementById('selectOptions');
+        const selectSearchInput = document.getElementById('selectSearchInput');
+        const optionsList = document.getElementById('optionsList');
+
+        // Toggle dropdown
+        selectTrigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isOpen = selectOptions.classList.contains('show');
+            if (isOpen) {
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        });
+
+        function openDropdown() {
+            selectOptions.classList.add('show');
+            selectTrigger.classList.add('active');
+            setTimeout(() => selectSearchInput.focus(), 50);
+        }
+
+        function closeDropdown() {
+            selectOptions.classList.remove('show');
+            selectTrigger.classList.remove('active');
+            selectSearchInput.value = '';
+            filterOptions('');
+        }
+
+        // Search filtering
+        selectSearchInput.addEventListener('input', function(e) {
+            filterOptions(e.target.value);
+        });
+
+        function filterOptions(query) {
+            const options = optionsList.querySelectorAll('.select-option');
+            const q = query.toLowerCase().trim();
+            let visibleCount = 0;
+
+            options.forEach(option => {
+                const name = option.querySelector('.option-name').textContent.toLowerCase();
+                const desc = option.querySelector('.option-desc').textContent.toLowerCase();
+                if (name.includes(q) || desc.includes(q)) {
+                    option.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+
+            // Handle no results
+            let noResults = optionsList.querySelector('.no-results');
+            if (visibleCount === 0) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.innerHTML = `
+                        <i class="fas fa-search"></i>
+                        <p>No operators found</p>
+                    `;
+                    optionsList.appendChild(noResults);
+                }
+            } else if (noResults) {
+                noResults.remove();
+            }
+        }
+
+        // Option selection
+        optionsList.querySelectorAll('.select-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const opKey = this.dataset.operator;
+                selectOperatorOption(opKey);
+                closeDropdown();
+            });
+        });
+
+        function selectOperatorOption(opKey) {
+            // Mark as selected visually
+            optionsList.querySelectorAll('.select-option').forEach(o => o.classList.remove('selected'));
+            const selectedOption = optionsList.querySelector(`[data-operator="${opKey}"]`);
+            if (selectedOption) selectedOption.classList.add('selected');
+
+            const operator = operators[opKey];
+            selectedOperator = opKey;
+
+            // Update trigger icon to show selected operator
+            selectTriggerIcon.innerHTML = operator.letter;
+            selectTriggerIcon.style.background = operator.iconBg;
+            selectTriggerIcon.style.fontSize = operator.letter.length > 1 ? '13px' : '18px';
+
+            // Update trigger text
+            selectTriggerText.textContent = `${operator.name} DLT Portal`;
+            selectTriggerText.classList.add('selected');
+
+            // Show PDF section
+            const pdfSection = document.getElementById('pdfSection');
+            pdfSection.style.display = 'block';
+            pdfSection.classList.remove('fade-in');
+            void pdfSection.offsetWidth;
+            pdfSection.classList.add('fade-in');
+
+            // Update PDF title
+            document.getElementById('pdfTitle').textContent = `${operator.name} - PE-TM Binding Documentation`;
+
+            // Build PDF viewer UI
+            const pdfViewer = document.getElementById('pdfViewer');
+            pdfViewer.innerHTML = `
+                <div class="pdf-toolbar">
+                    <div class="pdf-page-info">
+                        <i class="fas fa-file-pdf" style="color: var(--danger);"></i>
+                        <span id="pageInfo">Loading...</span>
+                    </div>
+                    <div class="pdf-nav">
+                        <button id="prevPage" disabled><i class="fas fa-chevron-left"></i> Prev</button>
+                        <span id="pageNum" style="padding: 0 8px; font-weight: 600; color: var(--gray-700);">-/-</span>
+                        <button id="nextPage" disabled>Next <i class="fas fa-chevron-right"></i></button>
+                        <button id="zoomOut"><i class="fas fa-search-minus"></i></button>
+                        <span id="zoomLevel" style="padding: 0 8px; font-weight: 600; color: var(--gray-700);">100%</span>
+                        <button id="zoomIn"><i class="fas fa-search-plus"></i></button>
+                    </div>
+                </div>
+                <div class="pdf-canvas-container" id="pdfCanvasContainer">
+                    <div class="pdf-loading">
+                        <div class="spinner"></div>
+                        <p>Loading PDF document...</p>
+                    </div>
+                </div>
+            `;
+
+            // Load PDF
+            loadPdf(operator.pdf);
+
+            // Update download and open links
+            document.getElementById('downloadBtn').href = operator.pdf;
+            document.getElementById('downloadBtn').setAttribute('download', operator.pdf);
+            document.getElementById('openNewTabBtn').href = operator.pdf;
+
+            // Scroll to PDF
+            setTimeout(() => {
+                pdfSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 150);
+
+            showToast(`${operator.name} documentation loaded`, 'success');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!customSelect.contains(e.target)) {
+                closeDropdown();
+            }
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDropdown();
+            }
+        });
+
+        // PDF.js functions
+        async function loadPdf(url) {
+            try {
+                // Cancel any in-progress render
+                if (currentRenderTask) {
+                    try { await currentRenderTask.cancel(); } catch (e) { /* ignore */ }
+                    currentRenderTask = null;
+                }
+                // Destroy previous PDF doc
+                if (currentPdfDoc) {
+                    try { await currentPdfDoc.destroy(); } catch (e) { /* ignore */ }
+                    currentPdfDoc = null;
+                }
+
+                const loadingTask = pdfjsLib.getDocument(url);
+                currentPdfDoc = await loadingTask.promise;
+                totalPages = currentPdfDoc.numPages;
+                currentPage = 1;
+                document.getElementById('pageInfo').textContent = `${operators[selectedOperator].name} - PE-TM Documentation (${totalPages} page${totalPages > 1 ? 's' : ''})`;
+                document.getElementById('prevPage').disabled = false;
+                document.getElementById('nextPage').disabled = false;
+                renderPage(currentPage);
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                const container = document.getElementById('pdfCanvasContainer');
+                container.innerHTML = `
+                    <div class="pdf-loading">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 32px; color: var(--warning);"></i>
+                        <p style="color: var(--gray-700); font-weight: 600;">Unable to display PDF inline</p>
+                        <p style="font-size: 12px;">This can happen when opening from file:// protocol</p>
+                        <p style="font-size: 13px;">Please click <strong>Open</strong> or <strong>Download</strong> above to view the document</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function renderPage(pageNum) {
+            if (!currentPdfDoc) return;
+            try {
+                // Cancel any in-progress render task to prevent "same canvas" error
+                if (currentRenderTask) {
+                    try {
+                        await currentRenderTask.cancel();
+                    } catch (e) { /* ignore */ }
+                    currentRenderTask = null;
+                }
+
+                const page = await currentPdfDoc.getPage(pageNum);
+                const container = document.getElementById('pdfCanvasContainer');
+                const containerWidth = container.clientWidth - 40;
+                const baseViewport = page.getViewport({ scale: 1 });
+                const scale = (containerWidth / baseViewport.width) * currentScale;
+                const viewport = page.getViewport({ scale: scale });
+
+                let canvas = container.querySelector('canvas');
+                if (!canvas) {
+                    canvas = document.createElement('canvas');
+                    container.innerHTML = '';
+                    container.appendChild(canvas);
+                }
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                currentRenderTask = page.render(renderContext);
+                await currentRenderTask.promise;
+                currentRenderTask = null;
+
+                document.getElementById('pageNum').textContent = `${pageNum} / ${totalPages}`;
+                document.getElementById('zoomLevel').textContent = `${Math.round(currentScale * 100)}%`;
+                document.getElementById('prevPage').disabled = pageNum <= 1;
+                document.getElementById('nextPage').disabled = pageNum >= totalPages;
+            } catch (error) {
+                if (error.name !== 'RenderingCancelledException') {
+                    console.error('Error rendering page:', error);
+                }
+                currentRenderTask = null;
+            }
+        }
+
+        // PDF navigation
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#prevPage')) {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderPage(currentPage);
+                }
+            } else if (e.target.closest('#nextPage')) {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderPage(currentPage);
+                }
+            } else if (e.target.closest('#zoomIn')) {
+                if (currentScale < MAX_SCALE) {
+                    currentScale += SCALE_STEP;
+                    renderPage(currentPage);
+                }
+            } else if (e.target.closest('#zoomOut')) {
+                if (currentScale > MIN_SCALE) {
+                    currentScale -= SCALE_STEP;
+                    renderPage(currentPage);
+                }
+            }
+        });
+
+        // Keyboard navigation for PDF
+        document.addEventListener('keydown', function(e) {
+            if (!currentPdfDoc) return;
+            // Don't trigger when typing in the search input
+            if (document.activeElement === selectSearchInput) return;
+
+            if (e.key === 'ArrowLeft' && currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            } else if (e.key === 'ArrowRight' && currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            } else if (e.key === '+' || e.key === '=') {
+                if (currentScale < MAX_SCALE) {
+                    currentScale += SCALE_STEP;
+                    renderPage(currentPage);
+                }
+            } else if (e.key === '-') {
+                if (currentScale > MIN_SCALE) {
+                    currentScale -= SCALE_STEP;
+                    renderPage(currentPage);
+                }
+            }
+        });
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const msg = document.getElementById('toastMessage');
+
+            toast.className = `toast show ${type}`;
+            icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            icon.style.color = type === 'success' ? 'var(--success)' : 'var(--danger)';
+            msg.textContent = message;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
