@@ -355,18 +355,60 @@ export default function App() {
                   </Text>
                 </div>
                 <Divider style={{ margin: 0 }} />
-                <iframe
-                  key={selectedOperator.key}
-                  src={`/pdfjs/web/viewer.html?file=${encodeURIComponent('/' + selectedOperator.pdf)}`}
-                  title={`${selectedOperator.name} DLT guidelines`}
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: screens.xs ? 'calc(100vh - 200px)' : 'calc(100vh - 240px)',
-                    minHeight: screens.xs ? 450 : 520,
-                    border: 'none',
-                  }}
-                />
+                {!screens.xs ? (
+                  <iframe
+                    key={selectedOperator.key}
+                    src={`/${selectedOperator.pdf}`}
+                    title={`${selectedOperator.name} DLT guidelines`}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      height: 'calc(100vh - 240px)',
+                      minHeight: 520,
+                      border: 'none',
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '48px 24px',
+                      textAlign: 'center',
+                      background: dark ? '#141414' : '#fafafa',
+                      minHeight: 360,
+                    }}
+                  >
+                    <FilePdfOutlined style={{ fontSize: 64, color: '#cf1322', marginBottom: 16 }} />
+                    <Title level={4} style={{ margin: '0 0 8px 0' }}>
+                      {selectedOperator.name} Guidelines
+                    </Title>
+                    <Text type="secondary" style={{ display: 'block', marginBottom: 24, maxWidth: 280 }}>
+                      Mobile browsers do not support viewing PDF files inline. Please open the file to view the guidelines.
+                    </Text>
+                    <Button
+                      type="primary"
+                      size="large"
+                      icon={<ExportOutlined />}
+                      href={`/${selectedOperator.pdf}`}
+                      target="_blank"
+                      style={{ width: '100%', maxWidth: 240, marginBottom: 12, height: 48, borderRadius: 8, fontSize: 16, fontWeight: 600 }}
+                    >
+                      Open PDF Document
+                    </Button>
+                    <Button
+                      size="large"
+                      icon={<DownloadOutlined />}
+                      href={`/${selectedOperator.pdf}`}
+                      download={selectedOperator.pdf}
+                      style={{ width: '100%', maxWidth: 240, height: 48, borderRadius: 8, fontSize: 16 }}
+                    >
+                      Download PDF
+                    </Button>
+                  </div>
+                )}
               </Card>
             ) : (
               <Card
