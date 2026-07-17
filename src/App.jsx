@@ -1,30 +1,33 @@
-import React, { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  Container,
-  Grid,
-  Paper,
-  TextInput,
-  ActionIcon,
-  useMantineColorScheme,
-  Title,
-  Text,
+  ConfigProvider,
+  theme as antdTheme,
+  Layout,
+  Menu,
+  Input,
+  Typography,
   Button,
-  Group,
-  Stack,
-  UnstyledButton,
-  Box,
-  Center,
-  ThemeIcon
-} from '@mantine/core';
+  Space,
+  Avatar,
+  Empty,
+  Card,
+  Divider,
+  Tooltip,
+  Tag,
+} from 'antd';
 import {
-  IconSearch,
-  IconSun,
-  IconMoon,
-  IconFileText,
-  IconDownload,
-  IconExternalLink,
-  IconBook
-} from '@tabler/icons-react';
+  FilePdfOutlined,
+  DownloadOutlined,
+  ExportOutlined,
+  SearchOutlined,
+  MoonOutlined,
+  SunOutlined,
+  ReadOutlined,
+  FileSearchOutlined,
+} from '@ant-design/icons';
+
+const { Header, Sider, Content } = Layout;
+const { Title, Text } = Typography;
 
 const operators = [
   {
@@ -32,316 +35,273 @@ const operators = [
     name: 'Airtel',
     desc: 'Airtel DLT Portal Guidelines',
     pdf: 'AIRTEL_PE-TM .pdf',
-    color: '#ed1c24',
-    bgGradient: 'linear-gradient(135deg, #ed1c24, #b91c1c)',
-    letter: 'A'
+    color: '#e11d48',
+    letter: 'A',
   },
   {
     key: 'jio',
     name: 'Jio',
     desc: 'Jio TrueConnect DLT Guidelines',
     pdf: 'JIO PE-TM Chain.pdf',
-    color: '#0050b3',
-    bgGradient: 'linear-gradient(135deg, #0050b3, #003a82)',
-    letter: 'J'
+    color: '#1d4ed8',
+    letter: 'J',
   },
   {
     key: 'smartping',
     name: 'Smartping',
     desc: 'Smartping DLT Guidelines',
     pdf: 'Smartping PE-TM Mapping.pdf',
-    color: '#ff6b35',
-    bgGradient: 'linear-gradient(135deg, #ff6b35, #e55a2b)',
-    letter: 'SP'
+    color: '#ea580c',
+    letter: 'S',
   },
   {
     key: 'vilpower',
     name: 'Vilpower',
     desc: 'Vilpower DLT Guidelines',
     pdf: 'Vilpower PE TM Chain.pdf',
-    color: '#10b981',
-    bgGradient: 'linear-gradient(135deg, #10b981, #059669)',
-    letter: 'V'
+    color: '#059669',
+    letter: 'V',
   },
   {
     key: 'bsnl',
     name: 'BSNL',
     desc: 'BSNL DLT Guidelines',
     pdf: 'BSNL PE-TM Mapping .pdf',
-    color: '#f59e0b',
-    bgGradient: 'linear-gradient(135deg, #f59e0b, #d97706)',
-    letter: 'B'
-  }
+    color: '#ca8a04',
+    letter: 'B',
+  },
 ];
 
 export default function App() {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const dark = colorScheme === 'dark';
-  const [selectedKey, setSelectedKey] = useState(null);
+  const [dark, setDark] = useState(
+    typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
+  const [selectedKey, setSelectedKey] = useState('airtel');
   const [search, setSearch] = useState('');
 
   const selectedOperator = operators.find(op => op.key === selectedKey);
 
-  const filteredOperators = operators.filter(op =>
-    op.name.toLowerCase().includes(search.toLowerCase()) ||
-    op.desc.toLowerCase().includes(search.toLowerCase())
+  const filteredOperators = operators.filter(
+    op =>
+      op.name.toLowerCase().includes(search.toLowerCase()) ||
+      op.desc.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const menuItems = useMemo(
+    () =>
+      filteredOperators.map(op => ({
+        key: op.key,
+        icon: (
+          <Avatar
+            size={28}
+            style={{
+              backgroundColor: op.color,
+              fontSize: 12,
+              fontWeight: 600,
+              verticalAlign: 'middle',
+            }}
+          >
+            {op.letter}
+          </Avatar>
+        ),
+        label: (
+          <div style={{ lineHeight: 1.3, padding: '4px 0' }}>
+            <div style={{ fontWeight: 500 }}>{op.name}</div>
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              {op.desc}
+            </Text>
+          </div>
+        ),
+      })),
+    [filteredOperators]
   );
 
   return (
-    <Box
-      style={{
-        minHeight: '100vh',
-        background: dark 
-          ? 'radial-gradient(ellipse at bottom, #111827 0%, #0f172a 100%)'
-          : 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
-        paddingBottom: '40px',
-        transition: 'background 0.3s ease'
+    <ConfigProvider
+      theme={{
+        algorithm: dark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+        token: {
+          fontFamily:
+            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+          borderRadius: 6,
+        },
+        components: {
+          Layout: {
+            headerBg: dark ? '#141414' : '#ffffff',
+            siderBg: dark ? '#141414' : '#ffffff',
+            bodyBg: dark ? '#000000' : '#f5f5f5',
+            headerHeight: 56,
+            headerPadding: '0 24px',
+          },
+          Menu: {
+            itemHeight: 56,
+            itemBg: 'transparent',
+          },
+        },
       }}
     >
-      <Container size="xl" pt="md">
-        {/* Header */}
-        <Paper
-          p="md"
-          radius="lg"
-          mb="xl"
+      <Layout style={{ minHeight: '100vh' }}>
+        {/* Top header */}
+        <Header
           style={{
-            background: dark ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.8)',
-            backdropFilter: 'blur(12px)',
-            border: `1px solid ${dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`,
-            boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.08)'
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderBottom: `1px solid ${dark ? '#303030' : '#f0f0f0'}`,
+            position: 'sticky',
+            top: 0,
+            zIndex: 10,
           }}
         >
-          <Group justify="space-between">
-            <Group>
-              <ThemeIcon
-                size="xl"
-                radius="md"
-                variant="gradient"
-                gradient={{ from: 'indigo', to: 'cyan' }}
-              >
-                <IconBook size={24} />
-              </ThemeIcon>
-              <div>
-                <Title order={3} style={{ fontWeight: 800 }}>
-                  PE-TM Binding Documentation
-                </Title>
-                <Text size="xs" c="dimmed">
-                  Official operator guidelines for Distributed Ledger Technology (DLT)
-                </Text>
-              </div>
-            </Group>
-            
-            <ActionIcon
-              variant="outline"
-              color={dark ? 'yellow' : 'blue'}
-              onClick={() => toggleColorScheme()}
-              title="Toggle color scheme"
-              size="lg"
-              radius="md"
-            >
-              {dark ? <IconSun size={18} /> : <IconMoon size={18} />}
-            </ActionIcon>
-          </Group>
-        </Paper>
+          <Space size="middle">
+            <Avatar
+              shape="square"
+              size={32}
+              style={{ backgroundColor: '#1677ff' }}
+              icon={<ReadOutlined />}
+            />
+            <div style={{ lineHeight: 1.2 }}>
+              <Text strong style={{ fontSize: 16 }}>
+                PE-TM Binding Documentation
+              </Text>
+              <br />
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Official operator guidelines for Distributed Ledger Technology (DLT)
+              </Text>
+            </div>
+          </Space>
 
-        {/* Dashboard Grid */}
-        <Grid gutter="md">
-          {/* Left panel: search and operator list */}
-          <Grid.Col span={{ base: 12, md: 4 }}>
-            <Paper
-              p="md"
-              radius="lg"
-              style={{
-                height: '100%',
-                background: dark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(255, 255, 255, 0.6)',
-                backdropFilter: 'blur(8px)',
-                border: `1px solid ${dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`
-              }}
-            >
-              <TextInput
+          <Space>
+            <Tag color="blue" style={{ marginInlineEnd: 0 }}>
+              {operators.length} portals
+            </Tag>
+            <Tooltip title={dark ? 'Switch to light mode' : 'Switch to dark mode'}>
+              <Button
+                type="text"
+                icon={dark ? <SunOutlined /> : <MoonOutlined />}
+                onClick={() => setDark(d => !d)}
+              />
+            </Tooltip>
+          </Space>
+        </Header>
+
+        <Layout>
+          {/* Sidebar: search + operator list */}
+          <Sider
+            width={300}
+            breakpoint="md"
+            collapsedWidth={0}
+            style={{
+              borderRight: `1px solid ${dark ? '#303030' : '#f0f0f0'}`,
+              height: 'calc(100vh - 56px)',
+              position: 'sticky',
+              top: 56,
+              overflow: 'auto',
+            }}
+          >
+            <div style={{ padding: '16px 16px 8px' }}>
+              <Input
+                allowClear
+                prefix={<SearchOutlined style={{ color: '#8c8c8c' }} />}
                 placeholder="Search DLT portals..."
-                leftSection={<IconSearch size={16} />}
-                mb="md"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                size="md"
-                radius="md"
               />
+            </div>
 
-              <Stack gap="xs">
-                {filteredOperators.map(op => {
-                  const isSelected = op.key === selectedKey;
-                  return (
-                    <UnstyledButton
-                      key={op.key}
-                      onClick={() => setSelectedKey(op.key)}
-                      style={{
-                        display: 'block',
-                        width: '100%',
-                        padding: '12px 16px',
-                        borderRadius: '12px',
-                        background: isSelected
-                          ? (dark ? 'rgba(99, 102, 241, 0.15)' : 'rgba(99, 102, 241, 0.08)')
-                          : 'transparent',
-                        border: `1px solid ${
-                          isSelected
-                            ? 'var(--mantine-color-indigo-filled)'
-                            : (dark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)')
-                        }`,
-                        transition: 'all 0.2s ease',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <Group justify="space-between" wrap="nowrap">
-                        <Group gap="sm" wrap="nowrap">
-                          <ThemeIcon
-                            size="md"
-                            radius="md"
-                            style={{
-                              background: op.bgGradient,
-                              color: '#fff',
-                              fontWeight: 800,
-                              fontSize: op.letter.length > 1 ? '11px' : '15px'
-                            }}
-                          >
-                            {op.letter}
-                          </ThemeIcon>
-                          <div style={{ overflow: 'hidden' }}>
-                            <Text size="sm" style={{ fontWeight: 600 }} truncate>
-                              {op.name}
-                            </Text>
-                            <Text size="xs" c="dimmed" truncate>
-                              {op.desc}
-                            </Text>
-                          </div>
-                        </Group>
-                      </Group>
-                    </UnstyledButton>
-                  );
-                })}
-
-                {filteredOperators.length === 0 && (
-                  <Center p="xl">
-                    <Stack align="center" gap="xs">
-                      <IconFileText size={32} c="dimmed" />
-                      <Text size="sm" c="dimmed">
-                        No DLT Portals match search
-                      </Text>
-                    </Stack>
-                  </Center>
-                )}
-              </Stack>
-            </Paper>
-          </Grid.Col>
-
-          {/* Right panel: PDF viewer */}
-          <Grid.Col span={{ base: 12, md: 8 }}>
-            {selectedOperator ? (
-              <Stack gap="md" style={{ height: '100%' }}>
-                <Paper
-                  p="md"
-                  radius="lg"
-                  style={{
-                    background: dark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(255, 255, 255, 0.6)',
-                    backdropFilter: 'blur(8px)',
-                    border: `1px solid ${dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`
-                  }}
-                >
-                  <Group justify="space-between">
-                    <Group gap="xs">
-                      <ThemeIcon size="md" color="red" variant="light">
-                        <IconFileText size={16} />
-                      </ThemeIcon>
-                      <Text style={{ fontWeight: 600 }}>
-                        {selectedOperator.name} - PE-TM Binding Documentation
-                      </Text>
-                    </Group>
-
-                    <Group gap="xs">
-                      <Button
-                        component="a"
-                        href={`/${selectedOperator.pdf}`}
-                        download={selectedOperator.pdf}
-                        variant="light"
-                        leftSection={<IconDownload size={14} />}
-                        size="xs"
-                        radius="md"
-                      >
-                        Download
-                      </Button>
-                      <Button
-                        component="a"
-                        href={`/${selectedOperator.pdf}`}
-                        target="_blank"
-                        variant="outline"
-                        leftSection={<IconExternalLink size={14} />}
-                        size="xs"
-                        radius="md"
-                      >
-                        Open Full
-                      </Button>
-                    </Group>
-                  </Group>
-                </Paper>
-
-                <Paper
-                  radius="lg"
-                  style={{
-                    flex: 1,
-                    minHeight: '600px',
-                    height: 'calc(100vh - 280px)',
-                    overflow: 'hidden',
-                    border: `1px solid ${dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`
-                  }}
-                >
-                  <iframe
-                    src={`/${selectedOperator.pdf}`}
-                    title={`${selectedOperator.name} DLT guidelines`}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      border: 'none',
-                      background: '#f8fafc'
-                    }}
-                  />
-                </Paper>
-              </Stack>
+            {filteredOperators.length > 0 ? (
+              <Menu
+                mode="inline"
+                selectedKeys={[selectedKey]}
+                onSelect={({ key }) => setSelectedKey(key)}
+                items={menuItems}
+                style={{ borderInlineEnd: 'none' }}
+              />
             ) : (
-              <Paper
-                p="xl"
-                radius="lg"
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description="No portals match your search"
+                style={{ marginTop: 48 }}
+              />
+            )}
+          </Sider>
+
+          {/* Main content: PDF viewer */}
+          <Content style={{ padding: 24 }}>
+            {selectedOperator ? (
+              <Card
+                variant="outlined"
+                styles={{ body: { padding: 0 } }}
+                title={
+                  <Space>
+                    <FilePdfOutlined style={{ color: '#cf1322', fontSize: 18 }} />
+                    <span>{selectedOperator.name} — PE-TM Binding Documentation</span>
+                  </Space>
+                }
+                extra={
+                  <Space>
+                    <Button
+                      icon={<DownloadOutlined />}
+                      href={`/${selectedOperator.pdf}`}
+                      download={selectedOperator.pdf}
+                    >
+                      Download
+                    </Button>
+                    <Button
+                      type="primary"
+                      icon={<ExportOutlined />}
+                      href={`/${selectedOperator.pdf}`}
+                      target="_blank"
+                    >
+                      Open
+                    </Button>
+                  </Space>
+                }
+              >
+                <div style={{ padding: '12px 24px' }}>
+                  <Text type="secondary">{selectedOperator.desc}</Text>
+                </div>
+                <Divider style={{ margin: 0 }} />
+                <iframe
+                  src={`/${selectedOperator.pdf}`}
+                  title={`${selectedOperator.name} DLT guidelines`}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    height: 'calc(100vh - 240px)',
+                    minHeight: 520,
+                    border: 'none',
+                  }}
+                />
+              </Card>
+            ) : (
+              <Card
+                variant="outlined"
                 style={{
-                  height: '100%',
-                  minHeight: '600px',
+                  height: 'calc(100vh - 104px)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: dark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.4)',
-                  backdropFilter: 'blur(8px)',
-                  border: `1px solid ${dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`
                 }}
               >
-                <Stack align="center" gap="sm">
-                  <ThemeIcon
-                    size={80}
-                    radius="50%"
-                    variant="light"
-                    color="indigo"
-                  >
-                    <IconFileText size={40} />
-                  </ThemeIcon>
-                  <Title order={3} ta="center">
-                    Select a DLT Portal
-                  </Title>
-                  <Text size="sm" c="dimmed" ta="center" style={{ maxWidth: 320 }}>
-                    Choose an operator from the search selector on the left to view the guidelines for PE-TM Binding.
-                  </Text>
-                </Stack>
-              </Paper>
+                <Empty
+                  image={<FileSearchOutlined style={{ fontSize: 56, color: '#8c8c8c' }} />}
+                  description={
+                    <div style={{ maxWidth: 320, margin: '0 auto' }}>
+                      <Title level={5}>Select a DLT Portal</Title>
+                      <Text type="secondary">
+                        Choose an operator from the list on the left to view its
+                        PE-TM binding guidelines.
+                      </Text>
+                    </div>
+                  }
+                />
+              </Card>
             )}
-          </Grid.Col>
-        </Grid>
-      </Container>
-    </Box>
+          </Content>
+        </Layout>
+      </Layout>
+    </ConfigProvider>
   );
 }
