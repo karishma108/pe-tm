@@ -14,6 +14,8 @@ import {
   Divider,
   Tooltip,
   Tag,
+  Grid,
+  Drawer,
 } from 'antd';
 import {
   FilePdfOutlined,
@@ -24,6 +26,7 @@ import {
   SunOutlined,
   ReadOutlined,
   FileSearchOutlined,
+  MenuOutlined,
 } from '@ant-design/icons';
 
 const { Header, Sider, Content } = Layout;
@@ -72,6 +75,8 @@ const operators = [
   },
 ];
 
+const { useBreakpoint } = Grid;
+
 export default function App() {
   const [dark, setDark] = useState(
     typeof window !== 'undefined' &&
@@ -79,6 +84,9 @@ export default function App() {
   );
   const [selectedKey, setSelectedKey] = useState('airtel');
   const [search, setSearch] = useState('');
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  const screens = useBreakpoint();
 
   const selectedOperator = operators.find(op => op.key === selectedKey);
 
@@ -117,6 +125,39 @@ export default function App() {
     [filteredOperators]
   );
 
+  const renderSidebarContent = () => (
+    <>
+      <div style={{ padding: '16px 16px 8px' }}>
+        <Input
+          allowClear
+          prefix={<SearchOutlined style={{ color: '#8c8c8c' }} />}
+          placeholder="Search DLT portals..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+      </div>
+
+      {filteredOperators.length > 0 ? (
+        <Menu
+          mode="inline"
+          selectedKeys={[selectedKey]}
+          onSelect={({ key }) => {
+            setSelectedKey(key);
+            setDrawerVisible(false);
+          }}
+          items={menuItems}
+          style={{ borderInlineEnd: 'none' }}
+        />
+      ) : (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="No portals match your search"
+          style={{ marginTop: 48 }}
+        />
+      )}
+    </>
+  );
+
   return (
     <ConfigProvider
       theme={{
@@ -152,30 +193,44 @@ export default function App() {
             position: 'sticky',
             top: 0,
             zIndex: 10,
+            padding: screens.xs ? '0 12px' : '0 24px',
           }}
         >
-          <Space size="middle">
-            <Avatar
-              shape="square"
-              size={32}
-              style={{ backgroundColor: '#1677ff' }}
-              icon={<ReadOutlined />}
-            />
-            <div style={{ lineHeight: 1.2 }}>
-              <Text strong style={{ fontSize: 16 }}>
-                PE-TM Binding Documentation
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, overflow: 'hidden' }}>
+            {!screens.md && (
+              <Button
+                type="text"
+                icon={<MenuOutlined />}
+                onClick={() => setDrawerVisible(true)}
+                style={{ fontSize: '18px', flexShrink: 0 }}
+              />
+            )}
+            {screens.sm && (
+              <Avatar
+                shape="square"
+                size={32}
+                style={{ backgroundColor: '#1677ff', flexShrink: 0 }}
+                icon={<ReadOutlined />}
+              />
+            )}
+            <div style={{ lineHeight: 1.2, minWidth: 0 }}>
+              <Text strong style={{ fontSize: screens.xs ? 14 : 16, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {screens.xs ? 'PE-TM Guidelines' : 'PE-TM Binding Documentation'}
               </Text>
-              <br />
-              <Text type="secondary" style={{ fontSize: 12 }}>
-                Official operator guidelines for Distributed Ledger Technology (DLT)
-              </Text>
+              {screens.sm && (
+                <Text type="secondary" style={{ fontSize: 12, display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  Official operator guidelines for Distributed Ledger Technology (DLT)
+                </Text>
+              )}
             </div>
-          </Space>
+          </div>
 
-          <Space>
-            <Tag color="blue" style={{ marginInlineEnd: 0 }}>
-              {operators.length} portals
-            </Tag>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            {screens.sm && (
+              <Tag color="blue" style={{ marginInlineEnd: 0 }}>
+                {operators.length} portals
+              </Tag>
+            )}
             <Tooltip title={dark ? 'Switch to light mode' : 'Switch to dark mode'}>
               <Button
                 type="text"
@@ -183,84 +238,121 @@ export default function App() {
                 onClick={() => setDark(d => !d)}
               />
             </Tooltip>
-          </Space>
+          </div>
         </Header>
 
         <Layout>
-          {/* Sidebar: search + operator list */}
-          <Sider
-            width={300}
-            breakpoint="md"
-            collapsedWidth={0}
-            style={{
-              borderRight: `1px solid ${dark ? '#303030' : '#f0f0f0'}`,
-              height: 'calc(100vh - 56px)',
-              position: 'sticky',
-              top: 56,
-              overflow: 'auto',
-            }}
-          >
-            <div style={{ padding: '16px 16px 8px' }}>
-              <Input
-                allowClear
-                prefix={<SearchOutlined style={{ color: '#8c8c8c' }} />}
-                placeholder="Search DLT portals..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-              />
-            </div>
+          {/* Sidebar on desktop */}
+          {screens.md && (
+            <Sider
+              width={300}
+              style={{
+                borderRight: `1px solid ${dark ? '#303030' : '#f0f0f0'}`,
+                height: 'calc(100vh - 56px)',
+                position: 'sticky',
+                top: 56,
+                overflow: 'auto',
+              }}
+            >
+              {renderSidebarContent()}
+            </Sider>
+          )}
 
-            {filteredOperators.length > 0 ? (
-              <Menu
-                mode="inline"
-                selectedKeys={[selectedKey]}
-                onSelect={({ key }) => setSelectedKey(key)}
-                items={menuItems}
-                style={{ borderInlineEnd: 'none' }}
-              />
-            ) : (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="No portals match your search"
-                style={{ marginTop: 48 }}
-              />
-            )}
-          </Sider>
+          {/* Drawer on mobile */}
+          <Drawer
+            title="DLT Portals"
+            placement="left"
+            onClose={() => setDrawerVisible(false)}
+            open={drawerVisible}
+            width={280}
+            styles={{ body: { padding: 0 } }}
+          >
+            {renderSidebarContent()}
+          </Drawer>
 
           {/* Main content: PDF viewer */}
-          <Content style={{ padding: 24 }}>
+          <Content style={{ padding: screens.xs ? 12 : 24 }}>
             {selectedOperator ? (
               <Card
                 variant="outlined"
                 styles={{ body: { padding: 0 } }}
                 title={
-                  <Space>
-                    <FilePdfOutlined style={{ color: '#cf1322', fontSize: 18 }} />
-                    <span>{selectedOperator.name} — PE-TM Binding Documentation</span>
-                  </Space>
+                  !screens.xs ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                      <FilePdfOutlined style={{ color: '#cf1322', fontSize: 18, flexShrink: 0 }} />
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {selectedOperator.name} — PE-TM Binding Documentation
+                      </span>
+                    </div>
+                  ) : null
                 }
                 extra={
-                  <Space>
-                    <Button
-                      icon={<DownloadOutlined />}
-                      href={`/${selectedOperator.pdf}`}
-                      download={selectedOperator.pdf}
-                    >
-                      Download
-                    </Button>
-                    <Button
-                      type="primary"
-                      icon={<ExportOutlined />}
-                      href={`/${selectedOperator.pdf}`}
-                      target="_blank"
-                    >
-                      Open
-                    </Button>
-                  </Space>
+                  !screens.xs ? (
+                    <Space>
+                      <Button
+                        icon={<DownloadOutlined />}
+                        href={`/${selectedOperator.pdf}`}
+                        download={selectedOperator.pdf}
+                      >
+                        Download
+                      </Button>
+                      <Button
+                        type="primary"
+                        icon={<ExportOutlined />}
+                        href={`/${selectedOperator.pdf}`}
+                        target="_blank"
+                      >
+                        Open
+                      </Button>
+                    </Space>
+                  ) : null
                 }
               >
-                <div style={{ padding: '12px 24px' }}>
-                  <Text type="secondary">{selectedOperator.desc}</Text>
+                {/* Mobile custom header */}
+                {screens.xs && (
+                  <div
+                    style={{
+                      padding: '12px 16px',
+                      borderBottom: `1px solid ${dark ? '#303030' : '#f0f0f0'}`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                      <FilePdfOutlined style={{ color: '#cf1322', fontSize: 18, flexShrink: 0 }} />
+                      <span style={{ fontWeight: 600, fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {selectedOperator.name} Guidelines
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                      <Button
+                        size="small"
+                        icon={<DownloadOutlined />}
+                        href={`/${selectedOperator.pdf}`}
+                        download={selectedOperator.pdf}
+                        style={{ flex: 1 }}
+                      >
+                        Download
+                      </Button>
+                      <Button
+                        size="small"
+                        type="primary"
+                        icon={<ExportOutlined />}
+                        href={`/${selectedOperator.pdf}`}
+                        target="_blank"
+                        style={{ flex: 1 }}
+                      >
+                        Open
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ padding: screens.xs ? '12px 16px' : '12px 24px' }}>
+                  <Text type="secondary" style={{ fontSize: screens.xs ? 12 : 14 }}>
+                    {selectedOperator.desc}
+                  </Text>
                 </div>
                 <Divider style={{ margin: 0 }} />
                 <iframe
@@ -269,8 +361,8 @@ export default function App() {
                   style={{
                     display: 'block',
                     width: '100%',
-                    height: 'calc(100vh - 240px)',
-                    minHeight: 520,
+                    height: screens.xs ? 'calc(100vh - 280px)' : 'calc(100vh - 240px)',
+                    minHeight: screens.xs ? 400 : 520,
                     border: 'none',
                   }}
                 />
