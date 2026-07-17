@@ -1,7 +1,8 @@
+node_modules
+dist
 .git
-.github
-Dockerfile
 .dockerignore
+Dockerfile
 .agents
 AGENTS.md
 walkthrough.md
