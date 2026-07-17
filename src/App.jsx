@@ -356,6 +356,7 @@ export default function App() {
                 </div>
                 <Divider style={{ margin: 0 }} />
                 <iframe
+                  key={selectedOperator.key}
                   src={`/${selectedOperator.pdf}`}
                   title={`${selectedOperator.name} DLT guidelines`}
                   style={{
